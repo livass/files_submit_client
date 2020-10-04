@@ -85,6 +85,132 @@ return res or err
         param.append('token', localStorage.token)
   ~~~
   
+###techer
+****
+
+* 界面框架
+    ~~~
+    使用Element中的Tabs组件实现整个界面的框架搭建
+    ~~~
+  ~~~
+  <div>
+
+    <el-tab-pane>
+        <span slot="label">发布作业</span>
+        ...
+    </el-tab-pane>
+    <el-tab-pane>
+        <span slot="label">收集作业</span>
+        ...
+    </el-tab-pane>
+    <el-tab-pane>
+        <span slot="label">删除作业</span>  
+        ...  
+    </el-tab-pane>
+
+  </div>
+  ~~~
+
+
+
+* 发布作业
+    ~~~
+    文本框中输入的数据
+    {
+        publish_work_name,  //输入的作业名称
+        publish_work_desc,  //输入的作业内容
+    }
+    ~~~
+    ~~~
+    发布作业方法
+    publish_assignments:function(){
+      this.$axios.post('http://47.96.235.211:3000/publish_assignments/',{//axios实现前后端数据交互
+        "token":localStorage.getItem("token"),                       //从localStorage中获取存储的token
+        "work_name":this.publish_work_name,
+        "work_desc":this.publish_work_desc                           //后端接收数据
+      }).then(function (response){                                   //response.data存储后端返回数据
+        localStorage.setItem("token",response.data.token)            //localStorage存储更新token
+        if(response.data.code==0){                                   //后端接受正确数据
+          alert("发布成功")                                           
+          localStorage.setItem("work_code",response.data.work_code)  //使用locaStorage存储后端返回的作业码
+        }
+        else{                                                        //后端接受错误信息输出错误
+          alert(JSON.stringify(response.data.msg))
+        }
+        }).catch(function (error){                                   //提交数据失败输出报错
+          console.log(error);
+        });
+    },
+    ~~~
+    ~~~
+    button显示作业码
+    show_work_code:function(){                                //获取存储在localStorage中的作业码信息
+      this.publish_work_code=localStorage.getItem("work_code")      
+    },
+    ~~~
+* 收集作业
+    ~~~
+    文本框中输入的数据
+
+    {
+        download_work_code  //发布作业时得到的作业码
+    }
+    ~~~
+    ~~~
+   收集作业方法
+
+    download_assignments:function(){
+      this.$axios.post('http://47.96.235.211:3000/download_assignments',{ //axios实现前后端数据交互
+        "token":localStorage.getItem("token"),                            //从localStorage中获取存储的token
+        "work_code":this.download_work_code,                              //后端接收数据
+      }).then(function (response){                                        //response.data存储后端返回数据
+        localStorage.setItem("token",response.data.token)                 //localStorage存储更新token
+        if(response.data.code==0){                                        //后端接受正确信息
+          alert("成功收集")
+          localStorage.setItem("download_url",response.data.download_url) //以localStorage存储后端返回的作业下载链接
+        }
+        else{                                                             //后端接受错误信息输出报错
+          alert(response.data.msg)
+        }
+        }).catch(function (error){                                        //提交数据失败输出报错
+          console.log(error);
+        });
+    },
+    ~~~
+    ~~~
+    button显示下载链接
+
+    show_download_url:function(){                                                         //获取存储在localStorage中的下载链接信息
+      this.download_url='http://47.96.235.211:3000'+localStorage.getItem("download_url")
+    }
+    ~~~
+* 删除作业
+    ~~~
+        文本框中输入的数据
+        {
+            delete_work_code //输入需删除的作业的作业码
+        }
+    ~~~
+    ~~~
+        删除作业方法
+        delete_assignments:function(){
+        this.$axios.post('http://47.96.235.211:3000/delete_assignments/',{//axios实现前后端数据交互
+        "token":localStorage.getItem("token"),                            //从localStorage中获取存储的token
+         "work_code":this.delete_work_code,                                //后端接收数据
+        }).then(function(response){                                         //response.data存储后端返回数据
+        localStorage.setItem("token",response.data.token)                 //localStorage存储更新token
+        if(response.data.code==0){                                        //后端获取正确信息
+            alert("删除成功")
+        }
+        else{                                                             //后端获取错误信息输出报错
+            alert(JSON.stringify(response.data.msg))
+            }
+            }).catch(function(error){                                       //提交数据失败输出报错
+            alert(error);
+            })
+        },
+    ~~~
+
 ### global
 ****
 * config_ip
@@ -172,3 +298,5 @@ return res or err
   Vue.prototype.GLOBAL = global_//挂载到Vue实例上面
   ~~~
   
+
+
