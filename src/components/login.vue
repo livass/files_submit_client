@@ -31,6 +31,9 @@ export default {
   //服务器提交代码数据
   methods:{
     postdata:function(){
+      // eslint-disable-next-line no-unused-vars
+      var password=this.password
+      localStorage.setItem("usr",this.user)
       this.$axios.post(this.GLOBAL.config_ip+'/login/',{//传送数据
           usr:this.user,
           pwd:this.password
@@ -40,7 +43,12 @@ export default {
              if(res.data.identify==1){
                //学生界面
                localStorage.setItem("token",res.data.token);
-               location.href='#/student'
+               //未修改密码000 进行修改密码界面
+               if(password=='000'){
+                location.href='#/resetpassword'
+                //修改密码进行正常跳转
+               }else
+                location.href='#/student_class'
            }else{
              //老师界面
              localStorage.setItem("token",res.data.token);
@@ -70,7 +78,7 @@ body {
 #login_box {
   width: 20%;
 
-  height: 400px;
+  height: 40%;
 
   background: #e9e7e7c7;
 

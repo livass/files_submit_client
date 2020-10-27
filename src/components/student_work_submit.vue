@@ -5,16 +5,15 @@
       <div id="input_box">
           <input type="file" id="_f">
           <br><br>
-        <el-input v-model="work_code" placeholder="请输入作业码" id="work_code"></el-input>
       </div>
     </div>
     <br /><br />
     <div>
       <el-button type="primary" plain @click="submit">上传文件</el-button>
-    </div>
+    </div><!--
      <div id="Sign">
-      <a href="#/login">退出登录</a>
-    </div>
+      <a href="#/student_work">返回上一界面</a>
+    </div>-->
   </div>
 </template>
 
@@ -36,15 +35,28 @@ methods:{
         // eslint-disable-next-line no-undef
         param.append('file', _f.files[0])
         // eslint-disable-next-line no-undef
-        param.append('work_code', work_code.value)
-        param.append('token', localStorage.token)
+        param.append('work_code', localStorage.getItem("work_code"))
+        param.append('token', localStorage.getItem("token"))
         this.$axios.post(this.GLOBAL.config_ip+'/submit_work/', param, axios_config)
             .then((res) => {
+              console.log(res.data)
+              if(res.data.code==0){
                 localStorage.setItem("token",res.data.token)
-                alert(JSON.stringify(res.data.msg))
+                this.$message({
+                  showClose: true,
+                  message: '恭喜你,上传成功',
+                  type: 'success'
+                });
+              }else{
+                this.$message({
+                  showClose: true,
+                  message: '错误的作业码',
+                  type: 'error'
+                })
+              }
             })
             .catch((err) => {
-                alert(err)
+                alert(err+"请勿重复提交")
             })
     }
 }
