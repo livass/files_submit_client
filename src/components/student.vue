@@ -40,7 +40,8 @@ methods:{
         param.append('token', localStorage.token)
         this.$axios.post(this.GLOBAL.config_ip+'/submit_work/', param, axios_config)
             .then((res) => {
-                alert(JSON.stringify(res.data))
+                localStorage.setItem("token",res.data.token)
+                alert(JSON.stringify(res.data.msg))
             })
             .catch((err) => {
                 alert(err)

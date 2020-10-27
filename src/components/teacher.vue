@@ -1,8 +1,11 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <template>
-  <div class="发作业">
-    <el-tabs type="border-card">
 
+  <div class="发作业">
+     <div class="rightBottom">
+      <a href="#/login">退出登录</a>
+    </div>
+    <el-tabs type="border-card">
     <!-----------------------------------------------------------发布作业------------------------------------------------------>
       <el-tab-pane>
         <span slot="label">发布作业</span>
@@ -157,3 +160,7 @@ export default {
   }
 }
 </script>
+
+<style>
+.rightBottom{position:fixed; _position:absolute; right:10px; bottom:10px; padding:4px;}
+</style>
