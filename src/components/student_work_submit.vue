@@ -9,7 +9,8 @@
     </div>
     <br /><br />
     <div>
-      <el-button type="primary" plain @click="submit">上传文件</el-button>
+      <i v-if="show" class="el-icon-loading"></i>
+      <el-button type="primary" plain @click="submit" id='b1'>上传文件</el-button>
     </div><!--
      <div id="Sign">
       <a href="#/student_work">返回上一界面</a>
@@ -26,11 +27,13 @@ var axios_config = {
 export default{
     data(){
         return{
-        work_code:''
+        work_code:'',
+        show:false
         }
     },
 methods:{
      submit:function() {
+        this.show=true
         var param = new FormData()
         // eslint-disable-next-line no-undef
         param.append('file', _f.files[0])
@@ -41,16 +44,18 @@ methods:{
             .then((res) => {
               console.log(res.data)
               if(res.data.code==0){
+                this.show=false
                 localStorage.setItem("token",res.data.token)
                 this.$message({
                   showClose: true,
                   message: '恭喜你,上传成功',
                   type: 'success'
                 });
+                location.href='#/student_work'
               }else{
                 this.$message({
                   showClose: true,
-                  message: '错误的作业码',
+                  message: '操作错误',
                   type: 'error'
                 })
               }

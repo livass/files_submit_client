@@ -107,7 +107,7 @@ methods:{
             localStorage.setItem("token",res.data.token)
             //alert
             // eslint-disable-next-line no-unused-vars
-            var date = new Date(res.data.work_deadline)
+            var date = new Date(res.data.work_deadline).toLocaleDateString() + " " + new Date(res.data.work_deadline).toLocaleTimeString()
             this.$alert(res.data.work_belong+'的作业:'+res.data.work_desc+'截止日期:'+date, '作业详情', {
             confirmButtonText: '确定',
             callback: action => {
