@@ -7,6 +7,8 @@ import student01 from '@/components/student01'
 import student_class from '@/components/student_class'
 import student_work from '@/components/student_work'
 import resetpassword from '@/components/resetpassword'
+import teacher_view from '@/components/teacher_view'
+
 Vue.prototype.$router = Router
 
 Vue.use(Router)
@@ -52,6 +54,11 @@ export default new Router({
       path:'/resetpassword',
       name:'resetpassword',
       component:resetpassword
+    },
+    {
+      path:'/teacher_view',
+      name:'teacher_view',
+      component:teacher_view
     }
   ]
 })

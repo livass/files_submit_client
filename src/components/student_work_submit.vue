@@ -9,8 +9,7 @@
     </div>
     <br /><br />
     <div>
-      <i v-if="show" class="el-icon-loading"></i>
-      <el-button type="primary" plain @click="submit" id='b1'>上传文件</el-button>
+      <el-button type="primary" plain @click="submit" id='b1'  v-loading.fullscreen.lock="fullscreenLoading">上传文件</el-button>
     </div><!--
      <div id="Sign">
       <a href="#/student_work">返回上一界面</a>
@@ -28,12 +27,16 @@ export default{
     data(){
         return{
         work_code:'',
-        show:false
+        fullscreenLoading: false
         }
     },
 methods:{
      submit:function() {
-        this.show=true
+        this.fullscreenLoading=true
+        // eslint-disable-next-line no-undef
+        var file=_f.files[0]
+        var size=file.size/1024
+        size=Math.round(size)
         var param = new FormData()
         // eslint-disable-next-line no-undef
         param.append('file', _f.files[0])
@@ -44,11 +47,11 @@ methods:{
             .then((res) => {
               console.log(res.data)
               if(res.data.code==0){
-                this.show=false
+                this.fullscreenLoading=false
                 localStorage.setItem("token",res.data.token)
                 this.$message({
                   showClose: true,
-                  message: '恭喜你,上传成功',
+                  message: '恭喜你,上传成功'+','+"文件大小为"+size+"kb",
                   type: 'success'
                 });
                 location.href='#/student_work'

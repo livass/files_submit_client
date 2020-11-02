@@ -59,19 +59,27 @@ methods:{
 
   // eslint-disable-next-line no-unused-vars
   lookscore(index){
-    alert('就这还想看分数')/*
     this.$axios.post(this.GLOBAL.config_ip+'/get_score/',{
       "token":localStorage.getItem("token"),
       "work_code":arr2[index],
-      "user":localStorage.getItem("user")
+      "usr":localStorage.getItem("usr")
     }).then((res)=>{
+      if(res.data.score_detail.score<0){
+      if(res.data.score_detail.score==-3){
+        alert("未提交作业")
+      }
+      if(res.data.score_detail.score==-1){
+          alert("老师未打分")
+      }
+      }
+      else{
       localStorage.setItem("token",res.data.token)
-          this.$alert(res.data.score_detail.score, '成绩详情', {
+          this.$alert("你的分数是"+res.data.score_detail.score+"分", '成绩详情', {
           dangerouslyUseHTMLString: true
-        });
+        });}
     }).catch((err)=>{
-      alert(err+"老师未打分")
-    })*/
+      alert(err)
+    })
   },
   
   //----------------------------------------------------------------------------------------------------------------------------------------------
@@ -108,14 +116,17 @@ methods:{
             //alert
             // eslint-disable-next-line no-unused-vars
             var date = new Date(res.data.work_deadline).toLocaleDateString() + " " + new Date(res.data.work_deadline).toLocaleTimeString()
-            this.$alert(res.data.work_belong+'的作业:'+res.data.work_desc+'截止日期:'+date, '作业详情', {
+            /*this.$alert(res.data.work_belong+'的作业:'+res.data.work_desc+'截止日期:'+date, '作业详情', {
             confirmButtonText: '确定',
-            callback: action => {
+            callback:  action=> {
             this.$message({
               type: 'info',
-              message: `action: ${ action }`
+              message: action
             });
           }
+        });*/
+         this.$alert(res.data.work_belong+'的作业:'+res.data.work_desc+'  ,   '+'截止日期:'+date, '作业详情', {
+          dangerouslyUseHTMLString: true
         });
         //alert
         }).catch(function(err){
@@ -124,6 +135,6 @@ methods:{
         }
   }
 //-----------------------------------------------------------------------------------------------------------------------------------------
-  //over
+//over
 }
 </script>

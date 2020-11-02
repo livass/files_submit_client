@@ -3,7 +3,7 @@
     <h2>修改密码</h2>
     <div id="form">
       <div id="input_box">
-        <el-input v-model="newpassword1" placeholder="请输入新密码"></el-input>
+        <el-input v-model="newpassword1" placeholder="请输入新密码" show-password></el-input>
       </div>
       <div id="input_box">
         <el-input v-model="newpassword2" placeholder="请重新输入新密码" show-password></el-input>
