@@ -49,6 +49,11 @@ methods:{
         // eslint-disable-next-line no-undef
         param.append('work_code', localStorage.getItem("work_code"))
         param.append('token', localStorage.getItem("token"))
+        this.$confirm('你的文件大小为'+size+'kb'+','+'是否上传', '是否上传?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
         this.$axios.post(this.GLOBAL.config_ip+'/submit_work/', param, axios_config)
             .then((res) => {
               console.log(res.data)
@@ -58,7 +63,7 @@ methods:{
                 localStorage.setItem("token",res.data.token)
                 this.$message({
                   showClose: true,
-                  message: '恭喜你,上传成功'+','+"文件大小为"+size+"kb",
+                  message: '恭喜你,上传成功',
                   type: 'success'
                 });
                 location.href='#/student_work'
@@ -198,6 +203,13 @@ methods:{
             .catch((err) => {
                 alert(err+"请勿重复提交")
             })
+            }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消上传'
+          });  
+          loading.close();        
+        });
     }
 }
 }
