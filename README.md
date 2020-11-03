@@ -374,6 +374,7 @@ return res or err
   ~~~
   import global_ from './components/global'//引用文件
   Vue.prototype.GLOBAL = global_//挂载到Vue实例上面
+  
   ~~~
   
 

@@ -184,7 +184,7 @@ methods:{
                   type: 'error'
                 });
                 break;
-                }
+                }//错误提示
                 //wrong information
                 /*this.$message({
                   showClose: true,
