@@ -1,7 +1,9 @@
 <template>
-<!--<div id="ot">
-  <a href='#/login'>退出登录</a>
-  <div>-->
+<div>
+  <div id="link">
+    <i class="el-icon-house"></i>
+<el-link type="primary" href='#/login'>退出登录</el-link>
+</div>
   <el-table
     :data="tableData"
     style="width: 100%">
@@ -23,6 +25,7 @@
       </template>
     </el-table-column>
   </el-table>
+  </div>
 </template>
 
 <script>

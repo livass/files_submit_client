@@ -128,4 +128,8 @@ body {
 #login_box #Sign a {
   color: #0c0b0c;
 }
+
+#link {
+  position:absolute;right:20px;bottom:20px;width:75px;border:0px solid #aaa
+}
 </style>
