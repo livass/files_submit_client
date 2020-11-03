@@ -4,8 +4,14 @@
   前端项目开发文档
 * /login.vue
   登录界面
-* /student.vue
+* /student_class
+  学生选择班级界面
+* /student_work.vue
+  学生选择作业界面
+* /student_work_submit.vue
   学生上传文件界面
+* /resetpassword
+  密码重置 
 * /teacher.vue
   老师发布页面
 * global.vue
@@ -85,7 +91,79 @@ return res or err
         param.append('token', localStorage.token)
   ~~~
   
-###techer
+### student_class
+****
+* layout
+  ~~~
+  tableData[],
+  this.tableData=Array.from(res.data.class_list)
+  ~~~
+* intoclass:function()
+  ~~~
+  intoclass(index,row){
+        localStorage.setItem("class",row.class)
+        location.href='#/student_work'
+    }
+  ~~~
+* create:fuction()
+  ~~~
+  axios.post(...)
+  .then(res)...
+  .catch(err)..
+  return class_list
+  ~~~
+
+###student_work
+****
+* lay
+  ~~~
+  tableDate[]
+  get arr1[]=work_list
+  ~~~
+* checkdetail:function()
+  ~~~
+  axios.post(...)
+  .then(res)
+  .catch(err)
+  get res.data.work_belong+res.data.work_desc
+  ~~~
+* postfile:function()
+  ~~~
+  location.href='#/student_work_submit'
+  ~~~
+* previewwork:function()
+  ~~~
+  axios.post(...)
+  .then(res)...
+  .catch(err)...
+  get res.data.url
+  ~~~
+* lookscore:function()
+  ~~~
+  axios.post(...)
+  .then(res)...
+  .catch(err)...
+  get res.data.score_detail
+  ~~~
+* create:function()
+  ~~~
+  axios.post...
+  ...
+  get arr1=work_list
+  get arr2=work_code
+  ~~~
+### resetpassword
+****
+* reset:function()
+  ~~~
+  axios.post(...)
+  .then(res)...
+  .catch(err)...
+  get newpasswrd
+  if newpassword==oldpassword
+  ~~~
+
+###teacher
 ****
 
 * 界面框架

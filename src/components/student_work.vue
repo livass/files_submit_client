@@ -1,4 +1,7 @@
 <template>
+<!--<div id="ot">
+  <a href='#/login'>退出登录</a>
+  <div>-->
   <el-table
     :data="tableData"
     style="width: 100%">
@@ -64,12 +67,21 @@ methods:{
       "work_code":arr2[index],
       "usr":localStorage.getItem("usr")
     }).then((res)=>{
+      console.log(res.data.score_detail.score)
       if(res.data.score_detail.score<0){
-      if(res.data.score_detail.score==-3){
-        alert("未提交作业")
+      if(res.data.score_detail.score==-2){
+        this.$message({
+                  showClose: true,
+                  message: '未提交作业',
+                  type: 'error'
+                })
       }
       if(res.data.score_detail.score==-1){
-          alert("老师未打分")
+          this.$message({
+                  showClose: true,
+                  message: '老师未打分',
+                  type: 'error'
+                })
       }
       }
       else{
@@ -92,6 +104,7 @@ methods:{
         location.href='#/student_work_submit'
   },
   //上传作业
+  //预览作业
   //-------------------------------------------------------------------------------------------------------------------------------------------
     previewwork(index){
       this.$axios.post(this.GLOBAL.config_ip+'/preview_assignment/',{
@@ -101,9 +114,14 @@ methods:{
         window.open(this.GLOBAL.config_ip+res.data.url)
       // eslint-disable-next-line no-unused-vars
       }).catch((err)=>{
-        alert("你还未提交作业")
+        this.$message({
+                  showClose: true,
+                  message: '你还未提交作业',
+                  type: 'error'
+                })
       })
   },
+  //预览作业
   //------------------------------------------------------------------------------------------------------------------------------------------
   //查看详情
   checkdetail(index){
@@ -126,7 +144,7 @@ methods:{
           }
         });*/
          this.$alert(res.data.work_belong+'的作业:'+res.data.work_desc+'  ,   '+'截止日期:'+date, '作业详情', {
-          dangerouslyUseHTMLString: true
+        dangerouslyUseHTMLString: true
         });
         //alert
         }).catch(function(err){
