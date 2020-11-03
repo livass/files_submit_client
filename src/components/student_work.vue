@@ -146,9 +146,18 @@ methods:{
             });
           }
         });*/
-         this.$alert(res.data.work_belong+'的作业:'+res.data.work_desc+'  ,   '+'截止日期:'+date, '作业详情', {
-        dangerouslyUseHTMLString: true
-        });
+            const h = this.$createElement;
+            let newDatas = [
+            h("p", null, res.data.work_belong+'的作业:'+res.data.work_desc),
+            h("p", null, '截止日期:'+date)
+            ];
+            this.$message({
+              message: h("div", null, newDatas),
+              type: "success"
+            });
+        //this.$alert(res.data.work_belong+'的作业:'+res.data.work_desc+'  ,   '+'截止日期:'+date, '作业详情', {
+        //dangerouslyUseHTMLString: true
+        //});
         //alert
         }).catch(function(err){
             alert(err)
