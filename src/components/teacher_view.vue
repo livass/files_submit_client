@@ -68,11 +68,12 @@
             <el-input v-model="editForm.usr" disabled></el-input>
           </el-form-item>
           <el-form-item label="成绩" size="mini">
-            <el-input v-model="editForm.score"></el-input>
+            <el-input v-model="editForm.score" onkeyup="this.value = this.value.replace(/[^\d.]/g,'');" ></el-input>
           </el-form-item>
+          <font style="font-size:10px;margin-left:-30px;!important" color="red">{{tips}}</font>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="editDialogVisible = false" size="mini" >取 消</el-button>
+          <el-button @click="editDialogVisible = false" size="mini" >取 消</el-button>
           <el-button type="primary" @click="editUserInfo(editForm)" size="mini">确 定</el-button>
         </span>
       </el-dialog>
@@ -99,11 +100,13 @@ var arr=[];
         detail_publish_work_name:"",
         editDialogVisible: false,
         editForm:{},
+        tips:"",
+        tips1:""
         }
     },
     created: function () {
         this.loading=true,
-        this.$axios.post(this.GLOBAL.config_ip+"/get_assignments_detail/",{
+        this.$axios.post(this.GLOBAL.config_ip+"/get_assignments_detail",{
             token:localStorage.getItem("token"),
             work_code:localStorage.getItem("work_code")
         }).then((res)=>{
@@ -136,14 +139,15 @@ var arr=[];
       },
 /*******************************************预览作业****************************************************** */
     Preview(usr){
-      this.$axios.post(this.GLOBAL.config_ip+'/preview_assignment/',{
+      this.$axios.post(this.GLOBAL.config_ip+'/preview_assignment',{
         "token":localStorage.getItem("token"),
         "work_code":localStorage.getItem("work_code"),
         "usr":usr
       }).then((response)=>{
-        localStorage.setItem("token",response.data.token)
+
         if(response.data.code==0){
           window.open(this.GLOBAL.config_ip+response.data.url)
+          localStorage.setItem("token",response.data.token)
         }
         else{
           this.$notify({
@@ -156,12 +160,19 @@ var arr=[];
     },
 
     showEditDialog(usr) {
+      this.tips=this.tips1,
       this.editForm.usr=usr,
       this.editDialogVisible = true
+      
     },
       
     editUserInfo(editForm){
-      this.$axios.post(this.GLOBAL.config_ip+'/grade_assignments/',{
+
+     //   this.tips=tips1
+        if(/^((100)|(\d{1,2}))(\.\d{0,2})?$/.test(editForm.score)==true){
+        //是数字
+
+      this.$axios.post(this.GLOBAL.config_ip+'/grade_assignments',{
         "token":localStorage.getItem("token"),
         "work_code":localStorage.getItem("work_code"),
         "updateTarget":[editForm]
@@ -174,15 +185,28 @@ var arr=[];
             type:'success'
           })
         }
-        })
+        this.editForm.score=""
+        this.tips=""
 
-        this.$axios.post(this.GLOBAL.config_ip+'/get_assignments_detail/',{
+        this.$axios.post(this.GLOBAL.config_ip+'/get_assignments_detail',{
           token:localStorage.getItem("token"),
           work_code:localStorage.getItem("work_code")
         }).then((res)=>{
           this.tableData_student=Array.from(res.data.stu_list)
           this.editDialogVisible = false
         })
+
+        })
+
+
+        
+        }
+        else{
+          this.editForm.score=""
+          this.tips="不是一个有效的成绩"
+        }
+        this.tips1=""
+
     }
     }
   }

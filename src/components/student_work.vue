@@ -147,17 +147,16 @@ methods:{
           }
         });*/
             const h = this.$createElement;
-            let newDatas = [
-            h("p", null, res.data.work_belong+'的作业:'+res.data.work_desc),
-            h("p", null, '截止日期:'+date)
-            ];
-            this.$message({
+            let newDatas=res.data.work_desc.split("\n").map(v=>h("p",null,v))
+            newDatas.push(h("p",null,'截止日期:'+date))
+            newDatas.unshift(h("p",null,res.data.work_belong+'老师的作业要求:'))
+            /*this.$message({
               message: h("div", null, newDatas),
               type: "success"
-            });
-        //this.$alert(res.data.work_belong+'的作业:'+res.data.work_desc+'  ,   '+'截止日期:'+date, '作业详情', {
-        //dangerouslyUseHTMLString: true
-        //});
+            });*/
+          this.$alert( h("div", null, newDatas),'查看详情',{
+          dangerouslyUseHTMLString: true
+          });
         //alert
         }).catch(function(err){
             alert(err)
