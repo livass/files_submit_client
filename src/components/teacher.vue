@@ -1,10 +1,6 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <template>
   <div class="发作业">
-    <div id="link">
-    <i class="el-icon-house"></i>
-<el-link type="primary" href='#/login'>退出登录</el-link>
-</div>
     <el-tabs type="border-card">
 
     <!-----------------------------------------------------------发布作业------------------------------------------------------>
@@ -43,7 +39,7 @@
       <el-tab-pane>
         <span slot="label" class="el-icon-search">查看作业详情</span>
             <div id="input_box">
-                <el-select v-model="publish_work_class" clearable placeholder="请选择查看的班级" @change="get_class_assignments">
+                <el-select v-model="detail_work_class" clearable placeholder="请选择查看的班级" @change="get_class_assignments">
                     <el-option
                       v-for="item in options"
                      :key="item"
@@ -100,26 +96,7 @@ export default {
           disabledDate(time) {
             return time.getTime() > Date.now();
           },
-          shortcuts: [{
-            text: '今天',
-            onClick(picker) {
-              picker.$emit('pick', new Date());
-            }
-          }, {
-            text: '昨天',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit('pick', date);
-            }
-          }, {
-            text: '一周前',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', date);
-            }
-          }]
+
         },
         publish_work_deadline: '',
         options: [],                  //班级
@@ -130,6 +107,7 @@ export default {
         download_work_code:'',
         download_url:'',
         delete_work_code:'',
+        detail_work_class:'',
         tableData:[],
     }
   },
@@ -141,6 +119,31 @@ export default {
   methods:{
           /* -----------------------------------发布作业方法-------------------------------------- */
     publish_assignments(){
+      if(!this.publish_work_name){
+        this.$message({
+          message:'请输入作业名称',
+          type:'warning'
+        })
+      }
+      else if(!this.publish_work_desc){
+        this.$message({
+          message:'请输入作业要求',
+          type:'warning'
+        })
+      }
+      else if(!this.publish_work_deadline){
+        this.$message({
+          message:'请选择截止日期',
+          type:'warning'
+        })
+      }
+      else if(!this.publish_work_class){
+        this.$message({
+          message:'请选择班级',
+          type:'warning'
+        })
+      }
+      else{
       this.$axios.post(this.GLOBAL.config_ip+'/publish_assignments/',{
         "token":localStorage.getItem("token"),
         "work_name":this.publish_work_name,
@@ -170,7 +173,7 @@ export default {
                 type:'error'
             })
         });
-    },
+    }},
     
     /* -----------------------------------删除发布的作业方法-------------------------------------- */
     delete_assignments(index,tabledata,work_code){
@@ -205,16 +208,16 @@ export default {
     },
     /********************************获取班级****************************************/
     get_class_assignments(){
-        this.$axios.post(this.GLOBAL.config_ip+'/get_assignments_list_by_class',{
+        this.$axios.post(this.GLOBAL.config_ip+"/get_assignments_list_by_class",{
             token:localStorage.getItem("token"),
-            class:this.publish_work_class
+            class:this.detail_work_class
         }).then((res)=>{
             this.tableData=Array.from(res.data.work_list)
         })
     },
     /********************************* 检索该老师所在班级************************************************/ 
     class_list:function(){
-        this.$axios.post(this.GLOBAL.config_ip+'/get_class_list',{
+        this.$axios.post(this.GLOBAL.config_ip+"/get_class_list",{
             token:localStorage.getItem("token"),
         }).then((res)=>{
             this.options=Array.from(res.data.class_list)

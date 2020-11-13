@@ -14,7 +14,7 @@
       <el-button type="primary" plain @click="postdata">login</el-button>
     </div>
     <div id="Sign">
-      <a href="http://baidu.com">忘记密码?</a>
+      <a href="http://baidu.com">修改密码</a>
     </div>
   </div>
   
@@ -37,7 +37,7 @@ export default {
       this.$axios.post(this.GLOBAL.config_ip+'/login/',{//传送数据
           usr:this.user,
           pwd:this.password
-        }).then(function(res){//成功登陆
+        }).then((res)=>{//成功登陆
         console.log(res.data.code)
            if(res.data.code==0){
              if(res.data.identify==1){
@@ -48,14 +48,19 @@ export default {
                 location.href='#/resetpassword'
                 //修改密码进行正常跳转
                }else
-                location.href='#/student_class'
+              location.href='#/student_class'
            }else{
              //老师界面
              localStorage.setItem("token",res.data.token);
              location.href='#/teacher'
            }
-           }else{
-             alert(res.data.msg);
+           }
+           else{
+             this.$message({
+                  showClose: true,
+                  message: '用户名密码不匹配',
+                  type: 'error'
+                });
            }
         }).catch(function(err){//失败
           console.log(err);

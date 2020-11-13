@@ -135,7 +135,7 @@ var arr=[];
         return row.submitStat == true ? '已提交作业' : row.submitStat == false ? '未提交作业' : '未知';
       },
       formatterS:function(row, column, cellValue, index){
-        return row.score == -3 ? '无作业' : row.score == -1 ? '未打分' : row.score;
+        return row.score < -1 ? '未提交作业' : row.score == -1 ? '暂无分数' : row.score;
       },
 /*******************************************预览作业****************************************************** */
     Preview(usr){
@@ -203,7 +203,7 @@ var arr=[];
         }
         else{
           this.editForm.score=""
-          this.tips="不是一个有效的成绩"
+          this.tips="请输入 0~100 的有效分数"
         }
         this.tips1=""
 
