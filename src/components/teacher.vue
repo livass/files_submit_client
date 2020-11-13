@@ -1,5 +1,10 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <template>
+<div>
+ <div id="link">
+    <i class="el-icon-house"></i>
+<el-link type="primary" href='#/login'>退出登录</el-link>
+</div>
   <div class="发作业">
     <el-tabs type="border-card">
 
@@ -31,7 +36,6 @@
           <el-button type="primary" sizes="medium" plain @click="publish_assignments" icon="el-icon-s-order">点 击 即 可 发 布 作 业</el-button>
         </div>
         <br>
-
     </el-tab-pane>
 
 
@@ -84,6 +88,7 @@
         </el-table>
       </el-tab-pane>
     </el-tabs>
+  </div>
   </div>
 </template>
 
