@@ -43,16 +43,12 @@ export default {
              if(res.data.identify==1){
                //学生界面
                localStorage.setItem("token",res.data.token);
-               //未修改密码000 进行修改密码界面
-               if(password=='000'){
-                location.href='#/resetpassword'
-                //修改密码进行正常跳转
-               }else
-              location.href='#/student_class'
+               //未修改密码000 进行修改密码界
+              location.href='#/bookbuy'
            }else{
              //老师界面
              localStorage.setItem("token",res.data.token);
-             location.href='#/teacher'
+             location.href='#/admin'
            }
            }
            else{
@@ -73,7 +69,7 @@ export default {
 <style>
 
 body {
-  background-image: url("../assets/backg.jpg");
+  background-image: url("../assets/2.jpg");
 
   background-size: cover;
 
@@ -136,5 +132,9 @@ body {
 
 #link {
   position:absolute;right:20px;bottom:20px;width:75px;border:0px solid #aaa
+}
+
+#wei {
+  position:absolute;right:500px;width:75px;border:0px solid
 }
 </style>
