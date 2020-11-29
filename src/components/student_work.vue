@@ -11,7 +11,7 @@
       fixed
       prop="work_name"
       label="作业名"
-      width="1000">
+      width="800">
     </el-table-column>
     <el-table-column
       fixed="right"
@@ -104,7 +104,7 @@ methods:{
   postfile(index){
         localStorage.setItem("work_code",arr2[index])
         console.log(arr2[index])
-        location.href='#/student_work_submit'
+        location.href='#/student_work_submit01'
   },
   //上传作业
   //预览作业

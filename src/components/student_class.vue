@@ -2,12 +2,13 @@
 <!--表格-->
   <el-table
     :data="tableData"
-        stripe
+    stripe
     style="width: 100%">
     <el-table-column
+      fixed
       prop=class
       label="班级"
-      width="1000">
+      width="800">
     </el-table-column>
     <el-table-column
       fixed="right"

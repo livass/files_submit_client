@@ -3,94 +3,65 @@
     <h2>上传文件</h2>
     <div id="form">
       <div id="input_box">
-           <el-upload
-  class="upload-demo"
-  ref="upload"
-  action="http://47.96.235.211:3000/"
-  :limit="1"
-  :file-list="fileList1"
-  :http-request="uploadSectionFile"
-  :auto-upload="false">
-  <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-</el-upload>
-          <br>
+          <br>    
+          <input type="file" id="_f" multiple="multiple" />
   <!--附件上传------------------------------------------------------>
-  
-    <el-button @click="show2 = !show2">附件</el-button>
     <br/><br/>
-      <transition name="el-zoom-in-center">
-        <div v-show="show2">
-        <el-upload
-  class="upload-demo"
-  ref="upload"
-  multiple
-  action="http://47.96.235.211:3000/"
-  :on-preview="handlePreview"
-  :on-remove="handleRemove"
-  :file-list="fileList"
-  :limit="10"
-  :http-request="uploadSectionFile1"
-  :auto-upload="false">
-  <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-</el-upload>
-</div>
-      </transition>
-    
+     
+    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> 
   </div><br>
       </div>
     <br />
-<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
     <!--------------------------------------------------------------->
-          <br/><br/>
- 
-      
     </div><!--
      <div id="Sign">
       <a href="#/student_work">返回上一界面</a>
     </div>-->
 </template>
 
-<!--文件，code，token-->
-
 <script>
 var axios_config = {
         headers: { 'Content-Type': 'multipart/form-data' }
 }
-export default{
-    data(){
-        return{
-        work_code:'',
-        show2: false,
-        fileList1:[],
-        fileList:[]
-        //fullscreenLoading: false
-        }
-    },
-methods:{
-     uploadSectionFile(param) {
-        //
-        const loading = this.$loading({
+export default {
+  data(){
+    return{
+    }
+  },
+ methods:{
+  // eslint-disable-next-line no-unused-vars
+   submitUpload(){
+      const loading = this.$loading({
           lock: true,
           text: 'Loading',
           spinner: 'el-icon-loading',
           background: 'rgba(0, 0, 0, 0.7)'
-        });//this.fullscreenLoading=true
-        // eslint-disable-next-line no-undef
-        var file=param.file
-        var size=file.size/1024
-        size=Math.round(size)
-        var form = new FormData()
-        // eslint-disable-next-line no-undef
-        form.append('file', file)
-        // eslint-disable-next-line no-undef
-        form.append('work_code', localStorage.getItem("work_code"))
-        form.append('token', localStorage.getItem("token"))
-        this.$confirm('你的文件大小为'+size+'kb'+','+'是否上传', '是否上传?', '提示', {
+        });
+     var param = new FormData()
+      // eslint-disable-next-line no-undef
+            console.log(Array.from(_f.files))
+            // eslint-disable-next-line no-undef
+            Array.from(_f.files).forEach(v => {
+                param.append('file', v)
+            })
+            param.append('work_code',localStorage.getItem("work_code"))
+            param.append('token',localStorage.getItem("token"))
+            // eslint-disable-next-line no-unused-vars
+            var size=0
+            // eslint-disable-next-line no-undef
+            var length=_f.files.length
+            // eslint-disable-next-line no-undef
+            for(let i=0;i<_f.files.length;i++){
+              // eslint-disable-next-line no-undef
+              size=size+_f.files[i].size/1024
+            }
+          size=Math.round(size)
+       this.$confirm('你上传了'+length+'个文件,你的文件总大小为'+size+'kb'+','+'是否上传', '是否上传?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-        this.$axios.post(this.GLOBAL.config_ip+'/submit_work/', form, axios_config)
+        this.$axios.post(this.GLOBAL.config_ip+'/submit_work/', param, axios_config)
             .then((res) => {
               console.log(res.data)
               if(res.data.code==0){
@@ -102,6 +73,7 @@ methods:{
                   message: '恭喜你,上传成功',
                   type: 'success'
                 });
+                location.href='#/student_work'
               }else{
                 //wrong information 
                 switch(res.data.code){
@@ -236,7 +208,8 @@ methods:{
               }
             })
             .catch((err) => {
-                alert(err+"请勿重复提交")
+              alert(err+"请勿重复提交")
+              loading.close();
             })
             }).catch(() => {
           this.$message({
@@ -245,44 +218,7 @@ methods:{
           });  
           loading.close();        
         });
-    },
-    uploadSectionFile1(param){
-       // eslint-disable-next-line no-unused-vars
-       var fileObj = param.file
-       // FormData 对象
-       // eslint-disable-next-line no-unused-vars
-       var form = new FormData()
-       form.append("file", fileObj)
-       form.append("token",localStorage.getItem("token"))
-       form.append("work_code",localStorage.getItem("work_code")) 
-      this.$axios.post(this.GLOBAL.config_ip+'/submit_work/', form, axios_config)
-       .then(res => {
-           console.log(res)
-         if(res.data.code!=1 ){
-           this.$message({
-             type:'success',
-             message:"success"
-           })
-          
-         } else {
-           this.$message({
-             type:'error',
-             message:"err"
-           })
-         }
-       }).catch(err=>{
-         console.log(err)
-       })
-     },
-    submitUpload(){
-    this.$refs.upload.submit()
-    },
-    handleRemove(file, fileList) {
-        console.log(file, fileList)
-      },
-    handlePreview(file) {
-        console.log(file)
-      }
-}
+    }
+ } 
 }
 </script>

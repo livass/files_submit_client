@@ -25,22 +25,30 @@
       :data="tableData_student"
       border
       style="width: 100%"
-      height="280"
+      height="300"
       size="mini"
+
       >
 
-        <el-table-column fixed  prop="usr"  label="学号" width="200" >  </el-table-column>
-        <el-table-column fixed  prop="score" :formatter="formatterS" label="分数" width="200" >  </el-table-column>
-        <el-table-column fixed  prop="submitStat" :formatter="formatterC" label="提交状态" width="200" >  </el-table-column>
+        <el-table-column   prop="usr"  label="学号" sortable min-width="160" >  </el-table-column>
+        <el-table-column   prop="score" :formatter="formatterS" label="分数" sortable min-width="160" >  </el-table-column>
+        <el-table-column   prop="submitStat" :formatter="formatterC" label="提交状态" sortable min-width="160" >  </el-table-column>
 
-        <el-table-column  fixed="right"  label="编辑"  >
+        <el-table-column   label="编辑" fixed="right" min-width="320">
           <template slot-scope="scope">
 
             <el-button @click="Preview(scope.row.usr)" 
             type="text" 
             icon="el-icon-search"
             size="mini">
-            预览作业
+            预览word作业
+            </el-button>
+
+            <el-button @click="Previewplus(scope.row.usr)" 
+            type="text" 
+            icon="el-icon-download"
+            size="mini">
+            下载所有附件
             </el-button>
 
             <el-button @click="showEditDialog(scope.row.usr)" 
@@ -61,14 +69,14 @@
       <el-dialog
         title="修改成绩"
         :visible.sync="editDialogVisible"
-        width="30%"
+        width="25%"
         size="mini">
-        <el-form :model="editForm"  label-width="40px">
+        <el-form :model="editForm"  label-width="50px">
           <el-form-item label="学号" size="mini">
             <el-input v-model="editForm.usr" disabled></el-input>
           </el-form-item>
           <el-form-item label="成绩" size="mini">
-            <el-input v-model="editForm.score" onkeyup="this.value = this.value.replace(/[^\d.]/g,'');" ></el-input>
+            <el-input-number v-model="editForm.score"  style="width: 100%;"></el-input-number>
           </el-form-item>
           <font style="font-size:10px;margin-left:-30px;!important" color="red">{{tips}}</font>
         </el-form>
@@ -127,6 +135,7 @@ var arr=[];
         });
 
     },
+    ////////////返回/////////////////////////////////////////
     methods: {
       goBack() {
         location.href='#/teacher'
@@ -157,6 +166,26 @@ var arr=[];
           })
         }
         })
+    },
+////////////////////////////下载附件/////////////////////////////////////////
+    Previewplus(usr){
+      this.$axios.post(this.GLOBAL.config_ip+'/download_assignments_plus',{
+        "token":localStorage.getItem("token"),
+        "work_code":localStorage.getItem("work_code"),
+        "usr":usr
+      }).then((response)=>{
+        if(response.data.code==0){
+          window.open(this.GLOBAL.config_ip+response.data.download_url)
+          localStorage.setItem("token",response.data.token)
+        }
+        }).catch(()=>{
+            console.log(this)
+            this.$notify({
+              title:'消息',
+              message:'作业未提交',
+              type:'info'
+            })
+          })
     },
 
     showEditDialog(usr) {
@@ -203,7 +232,7 @@ var arr=[];
         }
         else{
           this.editForm.score=""
-          this.tips="请输入 0~100 的有效分数"
+          this.tips="请输入 0~100 的有效分数,最多精确小数点后两位"
         }
         this.tips1=""
 

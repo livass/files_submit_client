@@ -1,10 +1,5 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <template>
-<div>
- <div id="link">
-    <i class="el-icon-house"></i>
-<el-link type="primary" href='#/login'>退出登录</el-link>
-</div>
   <div class="发作业">
     <el-tabs type="border-card">
 
@@ -16,6 +11,9 @@
         </div>
         <div id="input_box">
           <el-input type="textarea" :autosize="{ minRows: 6, maxRows: 12}" placeholder="作业要求" v-model="publish_work_desc"></el-input>
+        </div>
+        <div id="input_box">
+          <el-input type="textarea" :autosize="{ minRows: 1, maxRows: 1}" placeholder="自定义水印，不输入则使用默认水印#学号+姓名" v-model="text"></el-input>
         </div>
         <br>
         <div id="input_box">
@@ -36,6 +34,7 @@
           <el-button type="primary" sizes="medium" plain @click="publish_assignments" icon="el-icon-s-order">点 击 即 可 发 布 作 业</el-button>
         </div>
         <br>
+
     </el-tab-pane>
 
 
@@ -58,16 +57,24 @@
             border
             style="width: 100%"
             height="400"
+            
             >
 
-            <el-table-column fixed  prop="work_name"  label="作业名"   >  </el-table-column>
-<!------------------------------------------- 下载作业包 ------------------------------------------------------------------------------>
-            <el-table-column  fixed="right"  label="编辑"  >
+            <el-table-column  prop="work_name"  label="作业名" min-width="500"  >  </el-table-column>
+<!------------------------------------------- 下载WORD作业包 ------------------------------------------------------------------------------>
+            <el-table-column  fixed="right"  label="编辑" min-width="500" >
                 <template slot-scope="scope">
                     <el-button @click="download_assignments(scope.row.work_code)" 
                     type="text" 
                     icon="el-icon-download">
-                    下载作业包
+                    下载word作业包
+                    </el-button>
+
+<!------------------------------------------- 下载所有作业包 ------------------------------------------------------------------------------>
+                    <el-button @click="download_assignments_plus(scope.row.work_code)" 
+                    type="text" 
+                    icon="el-icon-download">
+                    下载所有作业包
                     </el-button>
 <!------------------------------------------ 删除作业 ------------------------------------------------------------------------------->        
                     <el-button
@@ -88,7 +95,6 @@
         </el-table>
       </el-tab-pane>
     </el-tabs>
-  </div>
   </div>
 </template>
 
@@ -114,12 +120,22 @@ export default {
         delete_work_code:'',
         detail_work_class:'',
         tableData:[],
+        text:'',
     }
   },
   mounted(){
     this.class_list();
   },
+    created: function () {
+      this.$axios.post(this.GLOBAL.config_ip+'/watermark_text_get',{
+        "token":localStorage.getItem("token"),
+      }).then((response)=>{
+        console.log(response.data.code)
+        localStorage.setItem("token",response.data.token)
+        this.text=response.data.text
+        });
 
+    },
 
   methods:{
           /* -----------------------------------发布作业方法-------------------------------------- */
@@ -178,6 +194,13 @@ export default {
                 type:'error'
             })
         });
+      
+      this.$axios.post(this.GLOBAL.config_ip+'/watermark_text/',{
+        "token":localStorage.getItem("token"),
+        "text":this.text,
+      }).then((response)=>{
+
+      })
     }},
     
     /* -----------------------------------删除发布的作业方法-------------------------------------- */
@@ -228,7 +251,7 @@ export default {
             this.options=Array.from(res.data.class_list)
         })
     },
-    /*************************************下载作业****************************************** */
+    /*************************************下载word作业****************************************** */
     download_assignments(work_code){
       this.$axios.post(this.GLOBAL.config_ip+'/download_assignments',{
         "token":localStorage.getItem("token"),
@@ -246,6 +269,25 @@ export default {
          })
         })
     },
+    /*************************************下载所有作业****************************************** */
+    download_assignments_plus(work_code){
+      this.$axios.post(this.GLOBAL.config_ip+'/download_assignments_plus',{
+        "token":localStorage.getItem("token"),
+        "work_code":work_code,
+      }).then((response)=>{
+        localStorage.setItem("token",response.data.token)
+        if(response.data.code==0){
+        window.open(this.GLOBAL.config_ip+response.data.download_url)
+      }
+        }).catch((error)=>{
+         this.$notify({
+            title:'错误',
+            message:error,
+            type:'error'
+         })
+        })
+    },
+
     /*********************************** 作业详情  ******************************************/
     detail_assignments(work_code){
       localStorage.setItem("work_code",work_code),
