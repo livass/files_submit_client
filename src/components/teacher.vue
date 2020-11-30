@@ -1,6 +1,10 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <template>
   <div class="发作业">
+    <div id="link">
+    <i class="el-icon-house"></i>
+<el-link type="primary" href='#/login'>退出登录</el-link>
+</div>
     <el-tabs type="border-card">
 
     <!-----------------------------------------------------------发布作业------------------------------------------------------>

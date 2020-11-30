@@ -72,7 +72,7 @@ methods:{
     }).then((res)=>{
       console.log(res.data.score_detail.score)
       if(res.data.score_detail.score<0){
-      if(res.data.score_detail.score==-2){
+      if(res.data.score_detail.score<=-2){
         this.$message({
                   showClose: true,
                   message: '未提交作业',

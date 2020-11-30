@@ -51,7 +51,7 @@
             下载所有附件
             </el-button>
 
-            <el-button @click="showEditDialog(scope.row.usr)" 
+            <el-button @click="showEditDialog(scope.row.usr,scope.row.submitStat)" 
             type="text" 
             icon="el-icon-edit"
             size="mini">
@@ -82,7 +82,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialogVisible = false" size="mini" >取 消</el-button>
-          <el-button type="primary" @click="editUserInfo(editForm)" size="mini">确 定</el-button>
+          <el-button type="primary" @click="confirm(editForm)" size="mini">确 定</el-button>
         </span>
       </el-dialog>
 
@@ -109,7 +109,8 @@ var arr=[];
         editDialogVisible: false,
         editForm:{},
         tips:"",
-        tips1:""
+        tips1:"",
+        test_submitStat:"",
         }
     },
     created: function () {
@@ -188,11 +189,11 @@ var arr=[];
           })
     },
 
-    showEditDialog(usr) {
+    showEditDialog(usr,submitStat) {
       this.tips=this.tips1,
       this.editForm.usr=usr,
       this.editDialogVisible = true
-      
+      this.test_submitStat=submitStat
     },
       
     editUserInfo(editForm){
@@ -236,6 +237,25 @@ var arr=[];
         }
         this.tips1=""
 
+    },
+    confirm(editForm){
+
+      if(this.test_submitStat==false)
+      {
+          this.$confirm('此学生上未提交作业, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+          }).then(()=>{
+            this.editUserInfo(editForm);
+          }).catch(()=>{
+
+          })
+      }
+      else
+      {
+        this.editUserInfo(editForm)
+      }
     }
     }
   }
