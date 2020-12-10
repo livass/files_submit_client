@@ -114,7 +114,15 @@ methods:{
         "token":localStorage.getItem("token"),
         "work_code":arr2[index]
       }).then((res)=>{
+        if(res.data.code==0)
         window.open(this.GLOBAL.config_ip+res.data.url)
+        else{
+        this.$message({
+                  showClose: true,
+                  message: '你还未提交作业',
+                  type: 'error'
+                })
+        }
       // eslint-disable-next-line no-unused-vars
       }).catch((err)=>{
         this.$message({
